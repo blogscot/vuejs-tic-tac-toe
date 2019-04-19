@@ -31,11 +31,14 @@ export default {
     // listens for a strike made by the user on cell
     // it is called by the Cell component
     Event.$on("strike", cellNumber => {
-      // sets either X or O in the clicked cell of the cells array
+      // sets either X or O in the clicked cell of the cell's array
       this.cells[cellNumber] = this.activePlayer;
       this.moves++;
       this.gameStatus = this.changeGameStatus();
-      this.changePlayer();
+      if (this.gameStatus != "win") {
+        this.changePlayer();
+        this.gameStatusMessage = `${this.activePlayer}'s turn`;
+      }
     });
 
     // listens for a restart button press
@@ -45,48 +48,33 @@ export default {
       Object.assign(this.$data, this.$options.data());
     });
   },
-  computed: {
+  methods: {
+    // returns the game status to the gameStatus property
+    changeGameStatus() {
+      if (this.checkForWin()) {
+        // trigger parent component to change the score
+        console.log(this.activePlayer);
+        Event.$emit("win", this.activePlayer);
+        this.gameStatusColor = "statusWin";
+        this.gameStatusMessage = `${this.activePlayer} Wins !`;
+        Event.$emit("freeze");
+        return "win";
+      } else if (this.moves === 9) {
+        this.gameStatusColor = "statusDraw";
+        this.gameStatusMessage = "Draw !";
+        return "draw";
+      }
+      return "turn";
+    },
+    changePlayer() {
+      this.activePlayer = this.nonActivePlayer();
+    },
     // helper property to get the non-active player
     nonActivePlayer() {
       if (this.activePlayer === "O") {
         return "X";
       }
       return "O";
-    }
-  },
-  watch: {
-    // watches for change in the value of gameStatus
-    // and changes the status message and color accordingly
-    gameStatus() {
-      if (this.gameStatus === "win") {
-        this.gameStatusColor = "statusWin";
-
-        this.gameStatusMessage = `${this.activePlayer} Wins !`;
-
-        return;
-      } else if (this.gameStatus === "draw") {
-        this.gameStatusColor = "statusDraw";
-
-        this.gameStatusMessage = "Draw !";
-
-        return;
-      }
-
-      this.gameStatusMessage = `${this.activePlayer}'s turn`;
-    }
-  },
-  methods: {
-    changePlayer() {
-      this.activePlayer = this.nonActivePlayer;
-    },
-    // returns the game status to the gameStatus property
-    changeGameStatus() {
-      if (this.checkForWin()) {
-        return this.gameIsWon();
-      } else if (this.moves === 9) {
-        return "draw";
-      }
-      return "turn";
     },
     // checks for possible win conditions from the data
     checkForWin() {
@@ -94,9 +82,6 @@ export default {
         // gets a single condition wc from the whole array
         let wc = this.winConditions[i];
         let cells = this.cells;
-
-        // compares 3 cell values based on the cells
-        // in the condition
         if (this.areEqual(cells[wc[0]], cells[wc[1]], cells[wc[2]])) {
           return true;
         }
@@ -111,13 +96,6 @@ export default {
           return false;
       }
       return true;
-    },
-    gameIsWon() {
-      // fires win event for the App component to change the score
-      Event.$emit("win", this.activePlayer);
-      this.gameStatusMessage = `${this.activePlayer} Wins !`;
-      Event.$emit("freeze");
-      return "win";
     }
   },
   data() {
@@ -126,7 +104,6 @@ export default {
       activePlayer: "O",
       // maintains the status of the game: turn or win or draw
       gameStatus: "turn",
-
       gameStatusMessage: `O's turn`,
       // status color is used as background color in the status bar
       // it can hold the name of either of the following CSS classes
