@@ -23,6 +23,42 @@
 
 <script>
 import Cell from "./Cell";
+
+const winConditions = [
+  [1, 2, 3],
+  [4, 5, 6],
+  [7, 8, 9],
+  [1, 4, 7],
+  [2, 5, 8],
+  [3, 6, 9],
+  [1, 5, 9],
+  [3, 5, 7]
+];
+
+function initialState() {
+  return {
+    // can be O or X
+    activePlayer: "O",
+    // maintains the status of the game: turn or win or draw
+    gameStatus: "turn",
+    gameStatusMessage: `O's turn`,
+    gameStatusColor: "statusTurn",
+    // no. of moves played by both players in a single game (max = 9)
+    moves: 0,
+    cells: {
+      1: "",
+      2: "",
+      3: "",
+      4: "",
+      5: "",
+      6: "",
+      7: "",
+      8: "",
+      9: ""
+    }
+  };
+}
+
 export default {
   components: {
     cell: Cell
@@ -45,7 +81,7 @@ export default {
     // the data of the component is reinitialized
     // it is called by the App component
     Event.$on("gridReset", () => {
-      Object.assign(this.$data, this.$options.data());
+      Object.assign(this.$data, initialState());
     });
   },
   methods: {
@@ -78,9 +114,9 @@ export default {
     },
     // checks for possible win conditions from the data
     checkForWin() {
-      for (let i = 0; i < this.winConditions.length; i++) {
+      for (let i = 0; i < winConditions.length; i++) {
         // gets a single condition wc from the whole array
-        let wc = this.winConditions[i];
+        let wc = winConditions[i];
         let cells = this.cells;
         if (this.areEqual(cells[wc[0]], cells[wc[1]], cells[wc[2]])) {
           return true;
@@ -99,44 +135,7 @@ export default {
     }
   },
   data() {
-    return {
-      // can be O or X
-      activePlayer: "O",
-      // maintains the status of the game: turn or win or draw
-      gameStatus: "turn",
-      gameStatusMessage: `O's turn`,
-      // status color is used as background color in the status bar
-      // it can hold the name of either of the following CSS classes
-      // statusTurn (default) is yellow for a turn
-      // statusWin is green for a win
-      // statusDraw is purple for a draw
-      gameStatusColor: "statusTurn",
-      // no. of moves played by both players in a single game (max = 9)
-      moves: 0,
-      // stores the placement of X and O in cells by their cell number
-      cells: {
-        1: "",
-        2: "",
-        3: "",
-        4: "",
-        5: "",
-        6: "",
-        7: "",
-        8: "",
-        9: ""
-      },
-      // contains all (8) possible winning conditions
-      winConditions: [
-        [1, 2, 3],
-        [4, 5, 6],
-        [7, 8, 9],
-        [1, 4, 7],
-        [2, 5, 8],
-        [3, 6, 9],
-        [1, 5, 9],
-        [3, 5, 7]
-      ]
-    };
+    return initialState();
   }
 };
 </script>
