@@ -1,16 +1,19 @@
 {
+  "name": "tic-tac-toe",
+  "version": "0.0.1",
+  "main": "index.js",
+  "license": "MIT",
   "scripts": {
     "start": "parcel index.html",
-    "build": "parcel build index.html"
+    "build": "parcel build index.html --public-url ./"
   },
   "dependencies": {
-    "parcel-bundler": "^1.12.3",
-    "vue": "^2.6.10",
-    "vue-hot-reload-api": "^2.3.3"
+    "vue": "^2.6.10"
   },
   "devDependencies": {
+    "parcel-bundler": "^1.12.3",
+    "vue-hot-reload-api": "^2.3.3",
     "@vue/component-compiler-utils": "^3.0.0",
     "vue-template-compiler": "^2.6.10"
-  },
-  "license": "MIT"
+  }
 }
