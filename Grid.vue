@@ -89,7 +89,6 @@ export default {
     changeGameStatus() {
       if (this.checkForWin()) {
         // trigger parent component to change the score
-        console.log(this.activePlayer);
         Event.$emit("win", this.activePlayer);
         this.gameStatusColor = "statusWin";
         this.gameStatusMessage = `${this.activePlayer} Wins !`;
@@ -103,14 +102,7 @@ export default {
       return "turn";
     },
     changePlayer() {
-      this.activePlayer = this.nonActivePlayer();
-    },
-    // helper property to get the non-active player
-    nonActivePlayer() {
-      if (this.activePlayer === "O") {
-        return "X";
-      }
-      return "O";
+      this.activePlayer = this.activePlayer === "O" ? "X" : "O";
     },
     // checks for possible win conditions from the data
     checkForWin() {
