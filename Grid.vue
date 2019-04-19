@@ -3,19 +3,19 @@
     {{ gameStatusMessage }}
     <table class="grid">
       <tr>
-        <cell name="1"></cell>
-        <cell name="2"></cell>
-        <cell name="3"></cell>
+        <cell name="1" @click="strike"></cell>
+        <cell name="2" @click="strike"></cell>
+        <cell name="3" @click="strike"></cell>
       </tr>
       <tr>
-        <cell name="4"></cell>
-        <cell name="5"></cell>
-        <cell name="6"></cell>
+        <cell name="4" @click="strike"></cell>
+        <cell name="5" @click="strike"></cell>
+        <cell name="6" @click="strike"></cell>
       </tr>
       <tr>
-        <cell name="7"></cell>
-        <cell name="8"></cell>
-        <cell name="9"></cell>
+        <cell name="7" @click="strike"></cell>
+        <cell name="8" @click="strike"></cell>
+        <cell name="9" @click="strike"></cell>
       </tr>
     </table>
   </div>
@@ -63,10 +63,8 @@ export default {
   components: {
     cell: Cell
   },
-  created() {
-    // listens for a strike made by the user on cell
-    // it is called by the Cell component
-    Event.$on("strike", cellNumber => {
+  methods: {
+    strike(cellNumber) {
       // sets either X or O in the clicked cell of the cell's array
       this.cells[cellNumber] = this.activePlayer;
       this.moves++;
@@ -75,16 +73,7 @@ export default {
         this.changePlayer();
         this.gameStatusMessage = `${this.activePlayer}'s turn`;
       }
-    });
-
-    // listens for a restart button press
-    // the data of the component is reinitialized
-    // it is called by the App component
-    Event.$on("gridReset", () => {
-      Object.assign(this.$data, initialState());
-    });
-  },
-  methods: {
+    },
     // returns the game status to the gameStatus property
     changeGameStatus() {
       if (this.checkForWin()) {
@@ -100,6 +89,10 @@ export default {
         return "draw";
       }
       return "turn";
+    },
+    resetBoard() {
+      Event.$emit("clearCell");
+      Object.assign(this.$data, initialState());
     },
     changePlayer() {
       this.activePlayer = this.activePlayer === "O" ? "X" : "O";

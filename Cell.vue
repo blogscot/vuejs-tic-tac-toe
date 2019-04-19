@@ -19,9 +19,8 @@ export default {
         this.mark = this.$parent.activePlayer;
         this.frozen = true;
 
-        // fires an event to notify the Grid component
-        // that a mark is placed
-        Event.$emit("strike", this.name);
+        // notify the parent that a mark is placed
+        this.$emit("click", this.name);
       }
     }
   },

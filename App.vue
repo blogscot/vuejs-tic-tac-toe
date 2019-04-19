@@ -10,7 +10,7 @@
         <h1>Tic Tac Toe</h1>
         <h2>Match #{{ matches + 1 }}</h2>
       </div>
-      <grid></grid>
+      <grid ref="grid"></grid>
       <button class="restart" @click="restart">Restart</button>
     </div>
   </main>
@@ -28,8 +28,7 @@ export default Vue.extend({
   },
   methods: {
     restart() {
-      Event.$emit("clearCell");
-      Event.$emit("gridReset");
+      this.$refs.grid.resetBoard();
       this.matches++;
     }
   },
