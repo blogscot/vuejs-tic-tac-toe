@@ -71,7 +71,7 @@ export default {
       this.cells[cellNumber] = this.activePlayer;
       this.moves++;
       this.gameStatus = this.changeGameStatus();
-      if (this.gameStatus != "win") {
+      if (this.gameStatus == "turn") {
         this.changePlayer();
         this.gameStatusMessage = `${this.activePlayer}'s turn`;
       }
